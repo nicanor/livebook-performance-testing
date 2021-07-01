@@ -123,9 +123,9 @@ We use inputs for the URL and for the number of iterations. We request the given
 the given number of times, and record how many milliseconds each request takes. We draw
 a live updating graph of this as the requests are made.
 
-<!-- livebook:{"livebook_object":"cell_input","name":"URL","type":"url","value":"http://httparrot.herokuapp.com/get"} -->
+<!-- livebook:{"livebook_object":"cell_input","name":"URL","type":"text","value":"http://localhost:4000/users/log_in"} -->
 
-<!-- livebook:{"livebook_object":"cell_input","name":"Iterations","type":"number","value":"50"} -->
+<!-- livebook:{"livebook_object":"cell_input","name":"Iterations","type":"number","value":"100"} -->
 
 First, we convert our inputs into variables. Note that LiveBook appends a newline to each input,
 so we need to remove this.
@@ -146,8 +146,10 @@ call to `Finch.request(MyFinch)`.
 Note that the function must return `:ok`
 
 ```elixir
+request = Finch.build(:get, url)
+
 request_function = fn ->
-  Finch.build(:get, "https://localhost:4000/users/log_in") |> Finch.request(MyFinch)
+  Finch.request(request, MyFinch)
   :ok
 end
 ```
