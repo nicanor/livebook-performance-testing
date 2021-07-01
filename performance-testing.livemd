@@ -12,14 +12,14 @@ We also generate some basic statistics eg. min/max/median run time.
 First we install our dependencies.
 
 * VegaLite for drawing graphs
-* HTTPoison for making the URL request
+* Finch for making the URL request
 * Kino for rendering the graph dyamically
 * Statistics for calculating summary stats from the data
 
 ```elixir
 Mix.install([
   {:vega_lite, "~> 0.1.0"},
-  {:httpoison, "~> 1.8"},
+  {:finch, "~> 0.8"},
   {:kino, "~> 0.2.0"},
   {:statistics, "~> 0.6.2"}
 ])
@@ -27,6 +27,10 @@ Mix.install([
 
 ```elixir
 alias VegaLite, as: Vl
+```
+
+```elixir
+Finch.start_link(name: MyFinch)
 ```
 
 ## Setup: Stats Summary Module
@@ -133,9 +137,9 @@ url = IO.gets("URL: ") |> String.trim()
 ```
 
 Next we set up our function to time repeatedly. In this case we use a straightforward
-call to `HTTPoison.get!`.
+call to `Finch.request(MyFinch)`.
 
-* We could use different `HTTPoison` methods or add headers/cookies/a request body etc.
+* We could use different `Finch` methods or add headers/cookies/a request body etc.
 * We could use `System.cmd/3` to shell out to any shell function
 * We could use any other Elixir function
 
@@ -143,7 +147,7 @@ Note that the function must return `:ok`
 
 ```elixir
 request_function = fn ->
-  HTTPoison.get!(url)
+  Finch.build(:get, "https://localhost:4000/users/log_in") |> Finch.request(MyFinch)
   :ok
 end
 ```
